@@ -36,6 +36,6 @@ git-deps: $(BUILD_TARGET)/git-deps/node-restful-api-tutorial
 
 deps: git-deps $(BUILD_TARGET)/keys/nodesource.gpg.key
 
-$(BUILD_TARGET)-build: deps docker-build
+build-$(BUILD_TARGET): deps build-docker
 
 .PHONY: git-deps deps

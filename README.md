@@ -17,3 +17,5 @@ Node Restful API PoC
 
 # Known Issues
 * Inspec broken on Alpine Linux ( See [build/node-rest-api/Dockerfile-alpine](build/node-rest-api/Dockerfile-alpine) )
+* Use credential helper for ecr login
+* Use S3 & Dynamo for terraform state & locking
