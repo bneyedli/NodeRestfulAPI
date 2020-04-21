@@ -16,4 +16,4 @@ Node Restful API PoC
 	* [TODO.md](docs/TODO.md)
 
 # Known Issues
-* Inspec broken on Alpine Linux ( See build/node-rest-api/Dockerfile-alpine )
+* Inspec broken on Alpine Linux ( See [build/node-rest-api/Dockerfile-alpine](build/node-rest-api/Dockerfile-alpine) )
