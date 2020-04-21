@@ -10,8 +10,8 @@
 	* [ ] Docker Image
 		* [x] Secure
 			* [x] Harden
-		* [ ] ECR
-			* [ ] Publish
+		* [x] ECR
+			* [x] Publish
 		* [ ] Test
 			* [ ] Unit Tests
 			* [ ] Healthcheck
@@ -21,7 +21,9 @@
 			* [ ] Usage
 			* [ ] Dev guide
 * [ ] Provision
-	* [ ] Terraform
+	* [x] Terraform
+		* [x] ECR
+		* [x] ECS
 		* [ ] Secure
 			* [ ] Best Practices
 		* [ ] Test
