@@ -4,6 +4,9 @@
 		* [ ] Test
 			* [ ] Unit Test
 	* [ ] Build
+		* [x] Docker Image
+		* [ ] Publish
+			* [ ] ECR
 		* [ ] Test
 			* [ ] Unit Test
 			* [ ] Compliance
