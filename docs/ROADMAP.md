@@ -1,20 +1,22 @@
 # Roadmap
 * [Release v0.1.0](TODO.md)
+	* [ ] Code API
 	* [ ] Provision
+		* [x] Terraform
 		* [ ] Test
 			* [ ] Unit Test
 	* [ ] Build
 		* [x] Docker Image
-		* [ ] Publish
-			* [ ] ECR
-		* [ ] Test
+		* [x] Publish
+			* [x] ECR
+		* [x] Test
 			* [ ] Unit Test
-			* [ ] Compliance
-			* [ ] Security Baseline
+			* [x] Compliance
+			* [x] Security Baseline
 	* [ ] Deploy
 		* [ ] Test
 			* [ ] Unit Test
 			* [ ] Security Baseline
 	* [ ] Document
-		* [ ] Usage
+		* [x] Usage
 		* [ ] Dev Guide

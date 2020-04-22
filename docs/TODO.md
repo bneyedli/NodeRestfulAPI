@@ -6,6 +6,9 @@
 * Deploy, test and document images in ECS
 
 ## Tasks
+* [ ] Src
+	* [ ] Code API server
+		* [ ] Learn NodeJS
 * [ ] Build
 	* [ ] Docker Image
 		* [x] Secure
@@ -18,7 +21,7 @@
 			* [x] Compliance
 			* [x] Security Baseline
 		* [ ] Document
-			* [ ] Usage
+			* [x] Usage
 			* [ ] Dev guide
 * [ ] Provision
 	* [x] Terraform
@@ -31,7 +34,7 @@
 		* [ ] Test
 			* [ ] Unit Tests
 		* [ ] Document
-			* [ ] Usage
+			* [x] Usage
 			* [ ] Dev guide
 				* [ ] TF Doc
 * [ ] Deploy
