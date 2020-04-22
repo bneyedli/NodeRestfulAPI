@@ -1,5 +1,6 @@
 resource "aws_ecs_cluster" "node-rest-api" {
   name = "node-rest-api"
+  capacity_providers = ["node-rest-api-${var.project_version}"]
 }
 
 resource "aws_ecs_task_definition" "node-rest-api-task" {
@@ -23,6 +24,10 @@ resource "aws_ecs_service" "node-rest-api-svc" {
   cluster         = aws_ecs_cluster.node-rest-api.id
   task_definition = aws_ecs_task_definition.node-rest-api-task.arn
   desired_count   = 1
+  capacity_provider_strategy {
+    capacity_provider = "node-rest-api-${var.project_version}"
+    weight = "100"
+  }
 
   placement_constraints {
     type       = "memberOf"

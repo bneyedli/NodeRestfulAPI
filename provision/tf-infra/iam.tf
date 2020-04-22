@@ -29,7 +29,7 @@ data "aws_iam_policy_document" "ecr-read" {
 
   }
   statement {
-    actions = [ "ecr:GetAuthorizationToken" ]
+    actions   = ["ecr:GetAuthorizationToken"]
     resources = ["*"]
   }
 
@@ -49,3 +49,23 @@ resource "aws_iam_role_policy_attachment" "ecr" {
   role       = aws_iam_role.ecs.name
   policy_arn = aws_iam_policy.ecr-read.arn
 }
+
+resource "aws_iam_role" "ec2" {
+  name               = "ec2"
+  assume_role_policy = data.aws_iam_policy_document.ec2-assume.json
+}
+
+resource "aws_iam_role_policy_attachment" "ecs-instance-role-attachment" {
+  role       = "${aws_iam_role.ec2.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+}
+
+resource "aws_iam_instance_profile" "ec2" {
+  name  = "ec2"
+  path  = "/"
+  role = aws_iam_role.ec2.id
+  provisioner "local-exec" {
+    command = "sleep 10"
+  }
+}
+
