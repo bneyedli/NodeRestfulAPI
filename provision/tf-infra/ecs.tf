@@ -31,7 +31,7 @@ resource "aws_ecs_service" "node-rest-api-svc" {
 }
 
 resource "aws_ecs_capacity_provider" "node-rest-api" {
-  name = "node-rest-api-cap"
+  name = "node-rest-api-${var.project_version}"
 
   auto_scaling_group_provider {
     auto_scaling_group_arn = aws_autoscaling_group.node-rest-api.arn
