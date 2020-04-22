@@ -24,8 +24,10 @@
 	* [x] Terraform
 		* [x] ECR
 		* [x] ECS
+		* [x] IAM
 		* [ ] Secure
 			* [ ] Best Practices
+			* [x] Security Groups
 		* [ ] Test
 			* [ ] Unit Tests
 		* [ ] Document
