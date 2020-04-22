@@ -31,5 +31,6 @@ publish-ecr: login-ecr
 	@[[ -z "$(DOCKER_TAGS)" ]] || ./utils/docker-tagger.sh $(AWS_ECR_HOST)/$(BUILD_TARGET):latest $(DOCKER_TAGS)
 	@docker push $(AWS_ECR_HOST)/$(BUILD_TARGET)
 
+publish: publish-ecr
 build: build-$(BUILD_TARGET)
 test: test-$(BUILD_TARGET)
