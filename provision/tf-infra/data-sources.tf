@@ -1,3 +1,4 @@
+#AMI For EC2 Container hosts
 data "aws_ami" "ecs" {
   most_recent = true
   owners      = ["591542846629"]

@@ -9,6 +9,7 @@ export DEBUG=0
 endif
 
 GIT_TAG_LAST=$(shell git tag -l | sort -V | tail -n1)
+TERRAFORM_ARGS=-var 'project_version=$(GIT_TAG_LAST)'
 
 include $(PROVISION_TARGET)/project-build.spec
 #include $(PROVISION_TARGET)/test/project-build-test.spec
@@ -20,15 +21,15 @@ init-tf-infra:
 
 plan-tf-infra: init-tf-infra
 	@(( $(DEBUG) == 0 )) || echo -e "--\nRun TF Plan for: $(PROVISION_TARGET)\n\twith args: $(TERRAFORM_PROVISION_ARGS)"
-	@terraform plan $(PROVISION_TARGET)
+	@terraform plan $(TERRAFORM_ARGS) $(PROVISION_TARGET)
 
 provision-tf-infra:
 	@(( $(DEBUG) == 0 )) || echo -e "--\nApply TF Plan for: $(PROVISION_TARGET)\n\twith args: $(TERRAFORM_PROVISION_ARGS)"
-	@terraform apply $(PROVISION_TARGET)
+	@terraform apply $(TERRAFORM_ARGS) $(PROVISION_TARGET)
 
 destroy-tf-infra:
 	@(( $(DEBUG) == 0 )) || echo -e "--\nDestroy TF Plan for: $(PROVISION_TARGET)\n\twith args: $(TERRAFORM_PROVISION_ARGS)"
-	@terraform destroy $(PROVISION_TARGET)
+	@terraform destroy $(TERRAFORM_ARGS) $(PROVISION_TARGET)
 
 format-tf-infra:
 	@terraform fmt $(PROVISION_TARGET)

@@ -1,3 +1,4 @@
+#Userdata template for container hosts
 data "template_file" "user-data" {
   template = "${file("${path.module}/templates/userdata.sh.tmpl")}"
   vars = {
@@ -5,6 +6,7 @@ data "template_file" "user-data" {
   }
 }
 
+#Launch template for container hosts
 resource "aws_launch_template" "node-rest-api" {
   name_prefix            = "node-rest-api"
   image_id               = data.aws_ami.ecs.id
@@ -16,6 +18,7 @@ resource "aws_launch_template" "node-rest-api" {
   }
 }
 
+#ASG for container hosts
 resource "aws_autoscaling_group" "node-rest-api" {
   name                  = "node-rest-api"
   availability_zones    = ["${var.aws_region}a", "${var.aws_region}b"]

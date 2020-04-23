@@ -3,5 +3,4 @@ variable "aws_region" {
 }
 
 variable "project_version" {
-  default = "v0_0_5"
 }

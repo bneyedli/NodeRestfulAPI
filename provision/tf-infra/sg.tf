@@ -21,4 +21,3 @@ resource "aws_security_group" "ingress-http" {
     Name = "ingress-http"
   }
 }
-
