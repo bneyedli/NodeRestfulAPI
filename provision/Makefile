@@ -16,22 +16,25 @@ TERRAFORM_ARGS=-var 'project_version=$(GIT_TAG_LAST)' -var 'project_name=$(PROVI
 include $(PROVISION_TARGET)/project-build.spec
 #include $(PROVISION_TARGET)/test/project-build-test.spec
 
+artifacts:
+	@mkdir -p $@
+
 init-tf-infra:
 	@(( $(DEBUG) == 0 )) || echo -e "--\nInit TF for: $(PROVISION_TARGET)\n\twith args: $(TERRAFORM_PROVISION_ARGS)"
 	@test -f .terraform/.tf-init || terraform init $(PROVISION_TARGET)
 	@touch .terraform/.tf-init
 
-plan-tf-infra: init-tf-infra
+plan-tf-infra: init-tf-infra artifacts
 	@(( $(DEBUG) == 0 )) || echo -e "--\nRun TF Plan for: $(PROVISION_TARGET)\n\twith args: $(TERRAFORM_PROVISION_ARGS)"
-	@terraform plan $(TERRAFORM_ARGS) $(PROVISION_TARGET)
+	@terraform plan $(TERRAFORM_ARGS) -out=artifacts/tf-plan.zip $(PROVISION_TARGET)
 
 provision-tf-infra:
 	@(( $(DEBUG) == 0 )) || echo -e "--\nApply TF Plan for: $(PROVISION_TARGET)\n\twith args: $(TERRAFORM_PROVISION_ARGS)"
-	@terraform apply $(TERRAFORM_ARGS) $(PROVISION_TARGET)
+	@terraform apply artifacts/tf-plan.zip
 
 destroy-tf-infra:
 	@(( $(DEBUG) == 0 )) || echo -e "--\nDestroy TF Plan for: $(PROVISION_TARGET)\n\twith args: $(TERRAFORM_PROVISION_ARGS)"
-	@terraform destroy $(TERRAFORM_ARGS) $(PROVISION_TARGET)
+	@terraform destroy artifacts/tf-plan.zip
 
 format-tf-infra:
 	@terraform fmt $(PROVISION_TARGET)
