@@ -7,7 +7,7 @@ data "template_file" "task-definition" {
   vars = {
     repo_host     = "171813784747.dkr.ecr.us-east-1.amazonaws.com"
     repo_name     = "node-rest-api"
-    container_tag = "latest"
+    container_tag = var.project_version
   }
 }
 

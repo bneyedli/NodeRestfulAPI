@@ -1,4 +1,10 @@
 # TODO -- v0.1.0
+## Acceptance criteria
+* containerize this app (https://github.com/academind/node-restful-api-tutorial)
+* Provision the application onto ECS
+* Plan app instrumentation for metrics
+* Plan authentication strategy
+* Plan scaling strategy
 ## Overview
 * Build, test and harden docker image to specifications of inspec dev-sec linux-patch-baseline and linux-baseline.
 * Publish qualified images to ECR repository.
@@ -6,9 +12,6 @@
 * Deploy, test and document images in ECS
 
 ## Tasks
-* [ ] Src
-	* [ ] Code API server
-		* [ ] Learn NodeJS
 * [ ] Build
 	* [ ] Docker Image
 		* [x] Secure
@@ -16,7 +19,7 @@
 		* [x] ECR
 			* [x] Publish
 		* [ ] Test
-			* [ ] Unit Tests
+			* [x] Unit Tests
 			* [ ] Healthcheck
 			* [x] Compliance
 			* [x] Security Baseline
