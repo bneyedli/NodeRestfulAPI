@@ -12,10 +12,10 @@ endif
 MANAGEMENT_IP=$(shell curl -s ifconfig.me)
 
 GIT_TAG_LAST=$(shell git tag -l | sort -V | tail -n1)
-TERRAFORM_ARGS=-var 'project_version=$(GIT_TAG_LAST)' -var 'project_name=$(PROVISION_TARGET)' -var 'management_ip=$(MANAGEMENT_IP)'
 
 include $(PROVISION_TARGET)/project-build.spec
 include $(PROVISION_TARGET)/test/project-build-test.spec
+
 
 artifacts:
 	@mkdir -p $@

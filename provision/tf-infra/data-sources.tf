@@ -37,5 +37,5 @@ data "aws_ami" "ecs" {
 #Collect metadata from ECS cluster
 data "external" "ecs-cluster-meta" {
   program    = ["${path.module}/utils/ecs-get-container-host-ip.sh", "node-rest-api"]
-  depends_on = [aws_ecs_service.node-rest-api-svc]
+  depends_on = [aws_ecs_service.node-rest-api-svc, aws_autoscaling_group.node-rest-api]
 }

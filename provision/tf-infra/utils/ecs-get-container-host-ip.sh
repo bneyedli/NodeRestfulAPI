@@ -7,11 +7,11 @@ count_max=300
 
 while true
 do
-  cluster_status=$(aws ecs describe-clusters --cluster node-rest-api --query clusters[].status --output text)
-  cluster_instance=$(aws ecs list-container-instances --cluster ${ECS_CLUSTER} --query containerInstanceArns --output text|cut -d/ -f2)
+  cluster_status=$(aws ecs describe-clusters --cluster ${ECS_CLUSTER} --query clusters[].status --output text)
+  cluster_instance=$(aws ecs list-container-instances --cluster ${ECS_CLUSTER} --query containerInstanceArns --output text | cut -d/ -f2)
   if (( count >= count_max ))
   then
-    >&2 echo "Cluster unstable, status: ${cluster_status}" 
+    >&2 echo "Cluster unstable, status: ${cluster_status} instance: ${cluster_instance}" 
     exit 1
   fi
 
