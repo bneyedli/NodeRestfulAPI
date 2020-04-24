@@ -3,6 +3,7 @@ data "template_file" "user-data" {
   template = "${file("${path.module}/templates/userdata.sh.tmpl")}"
   vars = {
     cluster_name = aws_ecs_cluster.node-rest-api.name
+    cluster_host = aws_route53_record.www.name
   }
 }
 

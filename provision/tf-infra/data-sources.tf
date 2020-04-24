@@ -33,3 +33,8 @@ data "aws_ami" "ecs" {
     values = ["xen"]
   }
 }
+
+#Collect metadata from ECS cluster
+data "external" "ecs-cluster-meta" {
+  program = ["${path.module}/utils/ecs-get-container-host-ip.sh","node-rest-api"]
+}

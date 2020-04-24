@@ -1,7 +1,13 @@
+#Create ECS Cluster
 resource "aws_ecs_cluster" "node-rest-api" {
   name = "node-rest-api"
+  setting {
+    name  = "containerInsights"
+    value = "disabled"
+  }
 }
 
+#Register task definition template
 data "template_file" "task-definition" {
   template = "${file("${path.module}/templates/node-rest-api-svc.json.tmpl")}"
   vars = {
@@ -11,6 +17,8 @@ data "template_file" "task-definition" {
   }
 }
 
+
+#Register task definition from rendered template
 resource "aws_ecs_task_definition" "node-rest-api-task" {
   family                = "node-rest-api"
   container_definitions = data.template_file.task-definition.rendered
@@ -26,6 +34,7 @@ resource "aws_ecs_task_definition" "node-rest-api-task" {
   }
 }
 
+#Create ECS service with task definition
 resource "aws_ecs_service" "node-rest-api-svc" {
   name            = "node-rest-api"
   cluster         = aws_ecs_cluster.node-rest-api.id

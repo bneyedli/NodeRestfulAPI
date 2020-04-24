@@ -1,3 +1,4 @@
+#Security group for ingress web traffic
 resource "aws_security_group" "ingress-web" {
   name        = "ingress-web"
   description = "Allow inbound web traffic"
@@ -23,6 +24,7 @@ resource "aws_security_group" "ingress-web" {
   }
 }
 
+#Security group for ingress SSH traffic
 resource "aws_security_group" "ingress-ssh" {
   name        = "ingress-ssh"
   description = "Allow inbound SSH traffic"
@@ -40,6 +42,7 @@ resource "aws_security_group" "ingress-ssh" {
   }
 }
 
+#Default egress rule
 resource "aws_security_group" "egress-default" {
   name        = "egress-default"
   description = "Allow all outbound traffic"

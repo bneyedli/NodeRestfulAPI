@@ -1,4 +1,5 @@
 SHELL=/usr/bin/env bash
+WORKDIR=$(PWD)
 
 ifndef PROVISION_TARGET
  $(error PROVISION_TARGET not defined, please export or pass inline)
@@ -34,13 +35,16 @@ provision-tf-infra:
 
 destroy-tf-infra:
 	@(( $(DEBUG) == 0 )) || echo -e "--\nDestroy TF Plan for: $(PROVISION_TARGET)\n\twith args: $(TERRAFORM_PROVISION_ARGS)"
-	@terraform destroy artifacts/tf-plan.zip
+	@terraform destroy $(TERRAFORM_ARGS) $(PROVISION_TARGET)
 
 format-tf-infra:
 	@terraform fmt $(PROVISION_TARGET)
+
+cycle-stack: destroy plan provision test
 
 destroy: destroy-$(PROVISION_TARGET)
 plan: plan-$(PROVISION_TARGET)
 provision: provision-$(PROVISION_TARGET)
 test: test-$(PROVISION_TARGET)
 format: format-tf-infra
+stack: format plan provision test
