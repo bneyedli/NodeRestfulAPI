@@ -18,9 +18,9 @@
 			* [x] Harden
 		* [x] ECR
 			* [x] Publish
-		* [ ] Test
+		* [x] Test
 			* [x] Unit Tests
-			* [ ] Healthcheck
+			* [x] Healthcheck
 			* [x] Compliance
 			* [x] Security Baseline
 		* [ ] Document
@@ -34,16 +34,16 @@
 		* [ ] Secure
 			* [ ] Best Practices
 			* [x] Security Groups
-		* [ ] Test
-			* [ ] Unit Tests
+		* [x] Test
+			* [x] Unit Tests
 		* [ ] Document
 			* [x] Usage
 			* [ ] Dev guide
 				* [ ] TF Doc
 * [ ] Deploy
 	* [ ] ECS
-		* [ ] Test
-			* [ ] Unit Tests
+		* [x] Test
+			* [x] Unit Tests
 		* [ ] Document
-			* [ ] Usage
+			* [x] Usage
 			* [ ] Dev guide

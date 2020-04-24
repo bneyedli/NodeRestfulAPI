@@ -22,11 +22,23 @@ $ make publish BUILD_TARGET=node-rest-api
 * Deploy
 	* Local
 	* ECS
+```
+$ make update test DEPLOY_TARGET=ecs
+```
 ## Example
+### Bootstrapping
 ```
 $ export BUILD_TARGET=node-rest-api PROVISION_TARGET=tf-infra
-cd build && make build publish test
-cd provision && make format plan provision
+cd provision && make format plan provision test
+cd build && make build test publish 
+```
+### Updating
+```
+$ export BUILD_TARGET=node-rest-api PROVISION_TARGET=tf-infra DEPLOY_TARGET=ecs
+$ cd build && make build test publish 
+$ cd provision && make format plan provision test
+# updates need to be forced due to cluster constraints
+$ cd deploy && make update-force test
 ```
 
 # Roadmap
@@ -43,7 +55,6 @@ cd provision && make format plan provision
 	* CodeBuild
 	* Branch Deployments
 * Add diagrams
-* Gate publish step if compliance tests fail
 
 # Known Issues / Notes
 * Inspec broken on Alpine Linux ( See [build/node-rest-api/Dockerfile-alpine](build/node-rest-api/Dockerfile-alpine) )
