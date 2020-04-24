@@ -19,15 +19,15 @@ include $(BUILD_TARGET)/project-build.spec
 include $(BUILD_TARGET)/test/project-build-test.spec
 
 build-docker:
-	@(( $(DEBUG) == 0 )) || echo -e "--\nBuilding docker image: $(BUILD_TARGET)\n\twith args: $(DOCKER_BUILD_ARGS)"
+	@echo -e "--\nBuilding docker image: $(BUILD_TARGET)\n\twith args: $(DOCKER_BUILD_ARGS)"
 	@docker build -t $(BUILD_TARGET):latest $(DOCKER_BUILD_ARGS) $(BUILD_TARGET)
-	@(( $(DEBUG) == 0 )) || echo -e "--\nTagging image with tags: $(DOCKER_TAGS)"
+	@echo -e "--\nTagging image with tags: $(DOCKER_TAGS)"
 	@[[ -z "$(DOCKER_TAGS)" ]] || ./utils/docker-tagger.sh $(BUILD_TARGET):latest $(DOCKER_TAGS)
 
 build-docker-clean:
-	@(( $(DEBUG) == 0 )) || echo -e "--\nBuilding docker image: $(BUILD_TARGET)\n\twith args: $(DOCKER_BUILD_ARGS)"
+	@echo -e "--\nBuilding docker image: $(BUILD_TARGET)\n\twith args: $(DOCKER_BUILD_ARGS)"
 	@docker build --no-cache -t $(BUILD_TARGET):latest $(DOCKER_BUILD_ARGS) $(BUILD_TARGET)
-	@(( $(DEBUG) == 0 )) || echo -e "--\nTagging image with tags: $(DOCKER_TAGS)"
+	@echo -e "--\nTagging image with tags: $(DOCKER_TAGS)"
 	@[[ -z "$(DOCKER_TAGS)" ]] || ./utils/docker-tagger.sh $(BUILD_TARGET):latest $(DOCKER_TAGS)
 
 login-ecr:

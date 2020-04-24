@@ -20,6 +20,6 @@ RUN inspec --chef-license=accept
 RUN sed -i -e 's/UMASK.*/UMASK\t027/' -e 's/PASS_MAX_DAYS.*/PASS_MAX_DAYS\t60/' -e 's/PASS_MIN_DAYS.*/PASS_MIN_DAYS\t7/' /etc/login.defs
 WORKDIR /srv/container/data
 RUN cp  /usr/local/src/git-deps/node-restful-api-tutorial/* . && npm install
-ENTRYPOINT ["entrypoint.sh"]
+CMD ["entrypoint.sh"]
 HEALTHCHECK --interval=5m --timeout=3s CMD curl localhost:3000 && curl localhost:8080
 EXPOSE 8080

@@ -4,3 +4,9 @@ variable "aws_region" {
 
 variable "project_version" {
 }
+
+variable "project_name" {
+}
+
+variable "management_ip" {
+}

@@ -51,6 +51,7 @@ cd provision && make format plan provision
 * Use S3 & Dynamo for terraform state & locking
 * https://pre-commit.com/
 * Use spot instances with asg
+* Investigate bazel for docker building
 * ~~ Running plan immediately after a destroy renders: ~~
 ```
 Error: error creating capacity provider: ClientException: The specified capacity provider already exists. To change the configuration of an existing capacity provider, update the capacity provider.
