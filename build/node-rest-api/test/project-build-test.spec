@@ -6,7 +6,7 @@ $(WORKDIR)/artifacts:
 test-service:
 	@echo "Test api endpoint"
 	@docker run --rm --name $(BUILD_TARGET) $(BUILD_TARGET) &
-	sleep 2 && curl -s -f --show-error -u junglescout:$(API_PASS) $$(docker inspect $(BUILD_TARGET) | jq -r .[].NetworkSettings.IPAddress):8080 && echo
+	@sleep 2 && curl -s -f --show-error -u junglescout:$(API_PASS) $$(docker inspect $(BUILD_TARGET) | jq -r .[].NetworkSettings.IPAddress):8080 && echo
 	@docker stop $(BUILD_TARGET)
 
 test-compliance: $(WORKDIR)/artifacts
