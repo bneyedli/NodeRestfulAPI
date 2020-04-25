@@ -7,8 +7,8 @@ cat > /usr/local/bin/cloudwatch-put-metrics.sh <<-EOF
 #!/usr/bin/env bash
 set -e -u -o pipefail
 
-time=$(curl -s -f -w %%{time_total} ${cluster_host} -o /dev/null)
-time_ms=$(echo "$${time} * 1000" | bc)
+time=\$(curl -s -f -w %%{time_total} ${cluster_host} -o /dev/null)
+time_ms==\$(echo "$${time} * 1000" | bc)
 
 echo "Put metrics for ResponseTimeMs: $${time_ms}"
 aws --region us-east-1 cloudwatch put-metric-data --metric-name ResponseTimeMs --namespace ECS/${cluster_name} --dimensions  ClusterID=${cluster_name},AppID=${cluster_name} --value $${time_ms}

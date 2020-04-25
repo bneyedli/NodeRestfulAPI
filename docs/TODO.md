@@ -12,8 +12,8 @@
 * Deploy, test and document images in ECS
 
 ## Tasks
-* [ ] Build
-	* [ ] Docker Image
+* [x] Build
+	* [x] Docker Image
 		* [x] Secure
 			* [x] Harden
 		* [x] ECR
@@ -23,9 +23,9 @@
 			* [x] Healthcheck
 			* [x] Compliance
 			* [x] Security Baseline
-		* [ ] Document
+		* [x] Document
 			* [x] Usage
-			* [ ] Dev guide
+			* [x] Dev guide
 * [ ] Provision
 	* [x] Terraform
 		* [x] ECR
@@ -38,12 +38,12 @@
 			* [x] Unit Tests
 		* [ ] Document
 			* [x] Usage
-			* [ ] Dev guide
-				* [ ] TF Doc
-* [ ] Deploy
-	* [ ] ECS
+			* [x] Dev guide
+			* [ ] TF Doc
+* [x] Deploy
+	* [x] ECS
 		* [x] Test
 			* [x] Unit Tests
-		* [ ] Document
+		* [x] Document
 			* [x] Usage
-			* [ ] Dev guide
+			* [x] Dev guide
