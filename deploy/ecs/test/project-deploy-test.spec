@@ -16,5 +16,5 @@ test-$(PROVISION_TARGET):
 	@[[ $(ECS_SERVICE_STATUS) == "ACTIVE" ]]; echo "Service status: $(ECS_SERVICE_STATUS)"
 	@echo "Verify DNS"
 	@dig +short $(ECS_CLUSTER_HOST) >/dev/null && echo "DNS OK"
-	@echo "Verify endpoint"
+	@echo "Verify endpoint: $(ECS_CLUSTER_FQDN) with user: junglescout"
 	@curl -s -f --show-error -u junglescout:$(API_PASS) $(ECS_CLUSTER_FQDN) && echo
