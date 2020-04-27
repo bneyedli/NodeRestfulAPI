@@ -1,0 +1,2 @@
+test-$(BUILD_TARGET):
+	docker images $(DOCKER_IMAGE):$(GIT_TAG_LAST)

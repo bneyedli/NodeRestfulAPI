@@ -14,29 +14,34 @@ export DEBUG=0
 endif
 
 GIT_TAG_LAST=$(shell git tag -l | sort -V | tail -n1)
+GIT_HASH_LAST=$(shell git rev-parse HEAD)
+DOCKER_IMAGE=$(subst docker-,,$(BUILD_TARGET))
 
-include $(BUILD_TARGET)/project-build.spec
-include $(BUILD_TARGET)/test/project-build-test.spec
+include $(BUILD_TARGET)/Makefile.in
+include $(BUILD_TARGET)/test/Makefile.in
+
+DOCKER_TAGS=$(GIT_TAG_LAST) git-$(GIT_HASH_LAST) $(DOCKER_TAGS_PROJECT)
 
 build-docker:
-	@echo -e "--\nBuilding docker image: $(BUILD_TARGET)\n\twith args: $(DOCKER_BUILD_ARGS)"
-	@docker build -t $(BUILD_TARGET):latest $(DOCKER_BUILD_ARGS) $(BUILD_TARGET)
+	@echo -e "--\nBuilding docker image: $(DOCKER_IMAGE)\n\twith args: $(DOCKER_BUILD_ARGS)"
+	@docker build -t $(DOCKER_IMAGE):latest $(DOCKER_BUILD_ARGS) $(BUILD_TARGET)
 	@echo -e "--\nTagging image with tags: $(DOCKER_TAGS)"
-	@[[ -z "$(DOCKER_TAGS)" ]] || ./utils/docker-tagger.sh $(BUILD_TARGET):latest $(DOCKER_TAGS)
+	@[[ -z "$(DOCKER_TAGS)" ]] || ./utils/docker-tagger.sh $(DOCKER_IMAGE):latest $(DOCKER_TAGS)
 
 build-docker-clean:
-	@echo -e "--\nBuilding docker image: $(BUILD_TARGET)\n\twith args: $(DOCKER_BUILD_ARGS)"
-	@docker build --no-cache -t $(BUILD_TARGET):latest $(DOCKER_BUILD_ARGS) $(BUILD_TARGET)
+	@echo -e "--\nBuilding docker image: $(DOCKER_IMAGE)\n\twith args: $(DOCKER_BUILD_ARGS)"
+	@docker build --no-cache -t $(DOCKER_IMAGE):latest $(DOCKER_BUILD_ARGS) $(BUILD_TARGET)
 	@echo -e "--\nTagging image with tags: $(DOCKER_TAGS)"
-	@[[ -z "$(DOCKER_TAGS)" ]] || ./utils/docker-tagger.sh $(BUILD_TARGET):latest $(DOCKER_TAGS)
+	@[[ -z "$(DOCKER_TAGS)" ]] || ./utils/docker-tagger.sh $(DOCKER_IMAGE):latest $(DOCKER_TAGS)
+	@echo Tagged
 
 login-ecr:
 	@aws $(AWS_CLI_ARGS) ecr get-login --no-include-email | awk '{ print $$6 }' | docker login --username AWS --password-stdin $(AWS_ECR_HOST)
 
 publish-ecr: login-ecr
-	@docker tag $(BUILD_TARGET):latest $(AWS_ECR_HOST)/$(BUILD_TARGET)
-	@[[ -z "$(DOCKER_TAGS)" ]] || ./utils/docker-tagger.sh $(AWS_ECR_HOST)/$(BUILD_TARGET):latest $(DOCKER_TAGS)
-	@docker push $(AWS_ECR_HOST)/$(BUILD_TARGET)
+	@docker tag $(DOCKER_IMAGE):latest $(AWS_ECR_HOST)/$(DOCKER_IMAGE)
+	@[[ -z "$(DOCKER_TAGS)" ]] || ./utils/docker-tagger.sh $(AWS_ECR_HOST)/$(DOCKER_IMAGE):latest $(DOCKER_TAGS)
+	@docker push $(AWS_ECR_HOST)/$(DOCKER_IMAGE)
 
 publish: publish-ecr
 build: build-$(BUILD_TARGET)
