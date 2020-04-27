@@ -2,7 +2,7 @@ ARG DOCKER_DISTRIBUTION
 ARG DOCKER_RELEASE
 FROM ${DOCKER_DISTRIBUTION}:${DOCKER_RELEASE}
 COPY git-deps /usr/local/src/git-deps
-COPY keys /usr/local/share/keys
+COPY files/keys/* /usr/local/share/keys/
 COPY files/bin/* /usr/local/bin/
 ENV DEBIAN_FRONTEND noninteractive
 ARG NODE_VERSION

@@ -22,6 +22,8 @@ include $(BUILD_TARGET)/test/Makefile.in
 
 DOCKER_TAGS=$(GIT_TAG_LAST) git-$(GIT_HASH_LAST) $(DOCKER_TAGS_PROJECT)
 
+#export DOCKER_BUILDKIT=1
+
 build-docker:
 	@echo -e "--\nBuilding docker image: $(DOCKER_IMAGE)\n\twith args: $(DOCKER_BUILD_ARGS)"
 	@docker build -t $(DOCKER_IMAGE):latest $(DOCKER_BUILD_ARGS) $(BUILD_TARGET)

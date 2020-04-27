@@ -1,2 +1,5 @@
 test-$(BUILD_TARGET):
 	docker images $(DOCKER_IMAGE):$(GIT_TAG_LAST)
+	docker run -it --rm  $(DOCKER_IMAGE):$(GIT_TAG_LAST) nginx
+	docker run -it --rm  $(DOCKER_IMAGE):$(GIT_TAG_LAST) nginx && sleep 2 && curl -H "User-Agent: masscan" http://localhost/ || true
+	docker run -it --rm  $(DOCKER_IMAGE):$(GIT_TAG_LAST) nginx && sleep 2 && grep PmFromFile /var/log/modsec_audit.log || true
