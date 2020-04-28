@@ -37,6 +37,9 @@ build-docker-clean:
 	@[[ -z "$(DOCKER_TAGS)" ]] || ./utils/docker-tagger.sh $(DOCKER_IMAGE):latest $(DOCKER_TAGS)
 	@echo Tagged
 
+purge-docker:
+	docker images $(DOCKER_IMAGE) | tr -s ' ' | cut -d ' ' -f 2 | xargs -I {} docker rmi $(DOCKER_IMAGE):{}
+
 login-ecr:
 	@aws $(AWS_CLI_ARGS) ecr get-login --no-include-email | awk '{ print $$6 }' | docker login --username AWS --password-stdin $(AWS_ECR_HOST)
 
