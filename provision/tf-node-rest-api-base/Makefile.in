@@ -1,7 +1,7 @@
 ECS_CLUSTER_HOST=node-rest-api
 ECS_CLUSTER_DOMAIN=dev.labs.bledsol.net
 ECS_CLUSTER_FQDN=$(ECS_CLUSTER_HOST).$(ECS_CLUSTER_DOMAIN)
-ECS_CONTAINER_HOST_ID=$(shell tf-infra/utils/ecs-get-container-host-ip.sh node-rest-api | jq -r .ecs_container_instance_id)
+ECS_CONTAINER_HOST_ID=$(shell $(PROVISION_TARGET)/utils/ecs-get-container-host-ip.sh node-rest-api | jq -r .ecs_container_instance_id)
 ROUTE53_ZONE_ID=Z0035772P7VYRJFQ3XI8
 TERRAFORM_ARGS=-var 'project_version=$(GIT_TAG_LAST)' \
 	-var 'project_name=$(PROVISION_TARGET)' \

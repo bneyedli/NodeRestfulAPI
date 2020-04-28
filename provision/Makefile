@@ -20,24 +20,24 @@ include $(PROVISION_TARGET)/test/Makefile.in
 artifacts:
 	@mkdir -p $@
 
-init-tf-infra:
+init-$(PROVISION_TARGET):
 	@(( $(DEBUG) == 0 )) || echo -e "--\nInit TF for: $(PROVISION_TARGET)\n\twith args: $(TERRAFORM_PROVISION_ARGS)"
 	@test -f .terraform/.tf-init || terraform init $(PROVISION_TARGET)
 	@touch .terraform/.tf-init
 
-plan-tf-infra: init-tf-infra artifacts
+plan-$(PROVISION_TARGET): init-$(PROVISION_TARGET) artifacts
 	@(( $(DEBUG) == 0 )) || echo -e "--\nRun TF Plan for: $(PROVISION_TARGET)\n\twith args: $(TERRAFORM_PROVISION_ARGS)"
-	@terraform plan $(TERRAFORM_ARGS) -out=artifacts/tf-plan.zip $(PROVISION_TARGET)
+	@terraform plan $(TERRAFORM_ARGS) -out=artifacts/$(PROVISION_TARGET)-plan.zip $(PROVISION_TARGET)
 
-provision-tf-infra:
+provision-$(PROVISION_TARGET):
 	@(( $(DEBUG) == 0 )) || echo -e "--\nApply TF Plan for: $(PROVISION_TARGET)\n\twith args: $(TERRAFORM_PROVISION_ARGS)"
-	@terraform apply artifacts/tf-plan.zip
+	@terraform apply artifacts/$(PROVISION_TARGET)-plan.zip
 
-destroy-tf-infra:
+destroy-$(PROVISION_TARGET):
 	@(( $(DEBUG) == 0 )) || echo -e "--\nDestroy TF Plan for: $(PROVISION_TARGET)\n\twith args: $(TERRAFORM_PROVISION_ARGS)"
 	@terraform destroy $(TERRAFORM_ARGS) $(PROVISION_TARGET)
 
-format-tf-infra:
+format-$(PROVISION_TARGET):
 	@terraform fmt $(PROVISION_TARGET)
 
 cycle-stack: destroy plan provision test
@@ -46,5 +46,5 @@ destroy: destroy-$(PROVISION_TARGET)
 plan: plan-$(PROVISION_TARGET)
 provision: provision-$(PROVISION_TARGET)
 test: test-$(PROVISION_TARGET)
-format: format-tf-infra
+format: format-$(PROVISION_TARGET)
 stack: format plan provision test

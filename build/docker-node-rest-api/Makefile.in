@@ -5,7 +5,7 @@
 DOCKER_DISTRIBUTION=ubuntu-web
 DOCKER_RELEASE=$(GIT_TAG_LAST)
 NODE_VERSION=12
-API_PASS=$(shell aws secretsmanager get-secret-value --secret-id /tf-infra/app/api_pass --query SecretString --output text)
+API_PASS=$(shell aws secretsmanager get-secret-value --secret-id /node-rest-api-base-tf/app/api_pass --query SecretString --output text)
 DOCKER_BUILD_ARGS=--build-arg DOCKER_DISTRIBUTION=$(DOCKER_DISTRIBUTION) \
 		--build-arg DOCKER_RELEASE=$(DOCKER_RELEASE) \
 		--build-arg NODE_VERSION=$(NODE_VERSION) \
