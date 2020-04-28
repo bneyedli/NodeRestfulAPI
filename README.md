@@ -7,38 +7,48 @@ Provision ECS/ECR and supporting Infra
 	* ECS
 ```
 $ cd provison
-$ make provision PROVISION_TARGET=tf-infra
+$ make provision PROVISION_TARGET=tf-node-rest-api-base
 ```
 * Build
 	* Local
 ```
 $ cd build
-$ make build BUILD_TARGET=node-rest-api
+$ make build BUILD_TARGET=docker-node-rest-api
 ```
 	* Publish to ECR
 ```
-$ make publish BUILD_TARGET=node-rest-api
+$ make publish BUILD_TARGET=docker-node-rest-api
 ```
 * Deploy
 	* Local
 	* ECS
 ```
-$ make update test DEPLOY_TARGET=ecs
+$ make update test DEPLOY_TARGET=ecs-node-rest-api
 ```
 ## Example
 ### Bootstrapping
 ```
-$ export BUILD_TARGET=node-rest-api PROVISION_TARGET=tf-infra
-cd provision && make format plan provision test
-cd build && make build test publish 
+$ export PROVISION_TARGET=tf-node-rest-api-base
+$ cd provision && make format plan provision test
+$ cd build
+# Build base images
+$ for target in docker-ubuntu-base docker-ubuntu-web
+do
+   make build test BUILD_TARGET=${target}
+done
+cd build && make build test publish BUILD_TARGET=docker-node-rest-api
 ```
 ### Updating
 ```
-$ export BUILD_TARGET=node-rest-api PROVISION_TARGET=tf-infra DEPLOY_TARGET=ecs
+$ export BUILD_TARGET=docker-node-rest-api PROVISION_TARGET=tf-node-rest-api-base DEPLOY_TARGET=ecs-node-rest-api
 $ cd build && make build test publish 
 $ cd provision && make format plan provision test
 # updates need to be forced due to cluster constraints
 $ cd deploy && make update-force test
+```
+### All at once
+```
+make stack
 ```
 
 # Roadmap

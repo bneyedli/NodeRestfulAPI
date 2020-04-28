@@ -14,8 +14,7 @@ ifndef DEBUG
 export DEBUG=0
 endif
 
-include $(DEPLOY_TARGET)/test/project-deploy-test.spec
-
+include $(DEPLOY_TARGET)/test/Makefile.in
 
 artifacts:
 	@mkdir -p $@
