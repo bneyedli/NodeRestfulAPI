@@ -2,3 +2,7 @@
 **/**tf-init
 **/.terraform
 **/artifacts
+**/git-deps
+**/src-deps
+**/mod-deps
+**/tmp

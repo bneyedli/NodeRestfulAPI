@@ -2,7 +2,7 @@
 DOCKER_DISTRIBUTION=ubuntu-base
 DOCKER_RELEASE=$(GIT_TAG_LAST)
 MODSEC_RELEASE=3.0.4
-MODSEC_NGINX_RELEASE=1.0.1 
+MODSEC_NGINX_RELEASE=1.0.1
 NGINX_VERSION=1.16.1
 
 DOCKER_BUILD_ARGS=--build-arg DOCKER_DISTRIBUTION=$(DOCKER_DISTRIBUTION) \
@@ -52,6 +52,19 @@ git-deps: $(BUILD_TARGET)/git-deps/ModSecurity $(BUILD_TARGET)/git-deps/ModSecur
 src-deps: $(BUILD_TARGET)/src-deps/nginx-$(NGINX_VERSION).tar.gz
 	@gpg --verify $(BUILD_TARGET)/src-deps/nginx-$(NGINX_VERSION).tar.gz.asc
 
+$(WORKDIR)/artifacts/$(BUILD_TARGET):
+	@mkdir -p $@
+
+$(WORKDIR)/tmp/$(BUILD_TARGET):
+	@mkdir -p $@
+
+build-deb: $(WORKDIR)/artifacts/$(BUILD_TARGET) $(WORKDIR)/tmp/$(BUILD_TARGET)
+	@docker run -it --rm --mount type=bind,source=$(WORKDIR)/artifacts/$(BUILD_TARGET),target=/srv/artifacts --mount type=bind,source=$(WORKDIR)/tmp/$(BUILD_TARGET),target=/opt/src $(DOCKER_IMAGE) build-nginx-module.sh $(NGINX_VERSION) $(MODSEC_RELEASE) $(MODSEC_NGINX_RELEASE)
+
+clean-tmp:
+	@rm -rf $(WORKDIR)/tmp/$(BUILD_TARGET)
+
+clean: clean-tmp
 deps: git-deps src-deps
 
-build-$(BUILD_TARGET): deps build-docker
+build-$(BUILD_TARGET): deps build-docker build-deb

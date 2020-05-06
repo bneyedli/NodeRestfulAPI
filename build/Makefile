@@ -17,6 +17,9 @@ GIT_TAG_LAST=$(shell git tag -l | sort -V | tail -n1)
 GIT_HASH_LAST=$(shell git rev-parse HEAD)
 DOCKER_IMAGE=$(subst docker-,,$(BUILD_TARGET))
 
+$(info $(BUILD_TARGET))
+$(info $(TARGET))
+
 include $(BUILD_TARGET)/Makefile.in
 include $(BUILD_TARGET)/test/Makefile.in
 
@@ -38,7 +41,8 @@ build-docker-clean:
 	@echo Tagged
 
 purge-docker:
-	docker images $(DOCKER_IMAGE) | tr -s ' ' | cut -d ' ' -f 2 | xargs -I {} docker rmi $(DOCKER_IMAGE):{}
+	docker images $(DOCKER_IMAGE) | grep -v ^REPOSITORY | tr -s ' ' | cut -d ' ' -f 2 | grep -v none | xargs -I {} docker rmi $(DOCKER_IMAGE):{} || true
+	docker images $(AWS_ECR_HOST)/$(DOCKER_IMAGE) | grep -v ^REPOSITORY | tr -s ' ' | cut -d ' ' -f 1 | grep -v none | xargs -I {} docker rmi $(AWS_ECR_HOST)/$(DOCKER_IMAGE):{} || true
 
 login-ecr:
 	@aws $(AWS_CLI_ARGS) ecr get-login --no-include-email | awk '{ print $$6 }' | docker login --username AWS --password-stdin $(AWS_ECR_HOST)
