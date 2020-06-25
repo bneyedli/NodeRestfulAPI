@@ -1,0 +1,70 @@
+#Sourced by parent Makefile ../
+DOCKER_DISTRIBUTION=ubuntu-base
+DOCKER_RELEASE=$(GIT_TAG_LAST)
+MODSEC_RELEASE=3.0.4
+MODSEC_NGINX_RELEASE=1.0.1
+NGINX_VERSION=1.16.1
+
+DOCKER_BUILD_ARGS=--build-arg DOCKER_DISTRIBUTION=$(DOCKER_DISTRIBUTION) \
+		--build-arg DOCKER_RELEASE=$(DOCKER_RELEASE) \
+		--build-arg NGINX_VERSION=$(NGINX_VERSION)
+DOCKER_TAGS_PROJECT=$(DOCKER_DISTRIBUTION)-$(DOCKER_RELEASE) modsec-$(MODSEC_RELEASE) modsec-nginx-$(MODSEC_NGINX_RELEASE)
+
+$(BUILD_TARGET)/git-deps:
+	@echo -e "--\nEnsure $@ dir exists"
+	@mkdir -p $@
+
+$(BUILD_TARGET)/src-deps:
+	@echo -e "--\nEnsure $@ dir exists"
+	@mkdir -p $@
+
+$(BUILD_TARGET)/files/keys:
+	@echo -e "--\nEnsure $@ dir exists"
+	@mkdir -p $@
+
+$(BUILD_TARGET)/files/keys/nginx.asc: $(BUILD_TARGET)/files/keys
+	@wget https://nginx.org/keys/nginx_signing.key -O $@
+
+$(BUILD_TARGET)/git-deps/ModSecurity: $(BUILD_TARGET)/git-deps
+	@echo -e "--\nClone repo: https://github.com/SpiderLabs/ModSecurity.git"
+	@test -d $@/.git || git clone https://github.com/SpiderLabs/ModSecurity.git $@
+
+$(BUILD_TARGET)/git-deps/ModSecurity-nginx: $(BUILD_TARGET)/git-deps
+	@echo -e "--\nClone repo: git clone https://github.com/SpiderLabs/ModSecurity-nginx.git"
+	@test -d $@/.git || git clone https://github.com/SpiderLabs/ModSecurity-nginx.git $@
+
+$(BUILD_TARGET)/git-deps/owasp-modsecurity-crs: $(BUILD_TARGET)/git-deps
+	@echo -e "--\nClone repo: https://github.com/SpiderLabs/owasp-modsecurity-crs.git"
+	@test -d $@/.git || git clone https://github.com/SpiderLabs/owasp-modsecurity-crs.git $@
+
+$(BUILD_TARGET)/src-deps/nginx-$(NGINX_VERSION).tar.gz.asc: $(BUILD_TARGET)/files/keys/nginx.asc $(BUILD_TARGET)/src-deps
+	@wget https://nginx.org/download/nginx-$(NGINX_VERSION).tar.gz.asc -O $@
+
+$(BUILD_TARGET)/src-deps/nginx-$(NGINX_VERSION).tar.gz: $(BUILD_TARGET)/src-deps/nginx-$(NGINX_VERSION).tar.gz.asc $(BUILD_TARGET)/src-deps
+	@wget https://nginx.org/download/nginx-$(NGINX_VERSION).tar.gz -O $@
+
+git-deps: $(BUILD_TARGET)/git-deps/ModSecurity $(BUILD_TARGET)/git-deps/ModSecurity-nginx
+	@(( $(DEBUG) == 0 )) || echo -e "--\nCheckout release: $(MODSEC_RELEASE)"
+	@cd $(BUILD_TARGET)/git-deps/ModSecurity; git checkout v$(MODSEC_RELEASE) && git submodule init && git submodule update
+	@(( $(DEBUG) == 0 )) || echo -e "--\nCheckout release: $(MODSEC_NGINX_RELEASE)"
+	@cd $(BUILD_TARGET)/git-deps/ModSecurity-nginx; git checkout v$(MODSEC_NGINX_RELEASE)
+
+src-deps: $(BUILD_TARGET)/src-deps/nginx-$(NGINX_VERSION).tar.gz
+	@gpg --verify $(BUILD_TARGET)/src-deps/nginx-$(NGINX_VERSION).tar.gz.asc
+
+$(WORKDIR)/artifacts/$(BUILD_TARGET):
+	@mkdir -p $@
+
+$(WORKDIR)/tmp/$(BUILD_TARGET):
+	@mkdir -p $@
+
+build-deb: $(WORKDIR)/artifacts/$(BUILD_TARGET) $(WORKDIR)/tmp/$(BUILD_TARGET)
+	@docker run -it --rm --mount type=bind,source=$(WORKDIR)/artifacts/$(BUILD_TARGET),target=/srv/artifacts --mount type=bind,source=$(WORKDIR)/tmp/$(BUILD_TARGET),target=/opt/src $(DOCKER_IMAGE) build-nginx-module.sh $(NGINX_VERSION) $(MODSEC_RELEASE) $(MODSEC_NGINX_RELEASE)
+
+clean-tmp:
+	@rm -rf $(WORKDIR)/tmp/$(BUILD_TARGET)
+
+clean: clean-tmp
+deps: git-deps src-deps
+
+build-$(BUILD_TARGET): deps build-docker build-deb

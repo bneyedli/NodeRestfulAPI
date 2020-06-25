@@ -1,0 +1,12 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - make update
+  post_build:
+    commands:
+      - make test
+artifacts:
+  files:
+    - artifacts/*

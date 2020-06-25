@@ -1,0 +1,13 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - make plan
+      - make provision
+  post_build:
+    commands:
+      - make test
+artifacts:
+  files:
+    - artifacts/*

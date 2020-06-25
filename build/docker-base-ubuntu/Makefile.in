@@ -1,0 +1,21 @@
+#Sourced by parent Makefile ../
+UBUNTU_RELEASE=eoan
+#Latest stable https://downloads.chef.io/inspec/stable
+INSPEC_VERSION=4.18.104
+INSPEC_VERSION_LATEST=$(shell curl -s https://api.github.com/repos/inspec/inspec/releases | jq -r .[].tag_name | sort -V | tail -n1)
+GEM_SOURCE_URL=https://rubygems.org
+
+DOCKER_BUILD_ARGS=--build-arg UBUNTU_RELEASE=$(UBUNTU_RELEASE) \
+		--build-arg INSPEC_VERSION=$(INSPEC_VERSION) \
+		--build-arg GEM_SOURCE_URL=$(GEM_SOURCE_URL)
+DOCKER_TAGS_PROJECT=ubuntu-$(UBUNTU_RELEASE) inspec-$(INSPEC_VERSION)
+
+build-$(BUILD_TARGET): build-docker
+
+version-check:
+	@if [[ "v$(INSPEC_VERSION)" == "$(INSPEC_VERSION_LATEST)" ]]; \
+	then \
+		echo "Project is pinned to latest release: $(INSPEC_VERSION)"; \
+	else \
+		echo "Latest inspec is: $(INSPEC_VERSION_LATEST) you are pinned to: $(INSPEC_VERSION)"; \
+	fi

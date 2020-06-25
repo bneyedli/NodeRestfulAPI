@@ -1,0 +1,30 @@
+API_PASS=$(shell aws secretsmanager get-secret-value --secret-id /tf-node-rest-api-base/app/api_pass --query SecretString --output text)
+ARTIFACT_DIR=$(WORKDIR)/artifacts/$(DOCKER_IMAGE)
+COMPLIANCE_PATCH_STATUS=$(shell jq '.controls[] | select(.status!="passed" and .status!="skipped") | .id' $(ARTIFACT_DIR)/dev-sec-linux-patch-baseline.json)
+COMPLIANCE_HARDEN_STATUS=$(shell jq '.controls[] | select(.status!="passed" and .status!="skipped") | .id' $(ARTIFACT_DIR)/dev-sec-linux-baseline.json)
+
+$(ARTIFACT_DIR):
+	@mkdir -p $@
+
+test-integration:
+	@echo -e "--\n -> Starting integration test"
+	@echo -e "\t-> Starting container $(DOCKER_IMAGE)"
+	@docker run --rm --name $(DOCKER_IMAGE) $(DOCKER_IMAGE) &
+	@echo -e "\t-> Test api endpoint"
+	@sleep 2 && curl -s -f --show-error -u junglescout:$(API_PASS) $$(docker inspect $(DOCKER_IMAGE) | jq -r .[].NetworkSettings.IPAddress):8080 && echo
+	@echo -e "\t-> Stopping container $(DOCKER_IMAGE)"
+	@docker stop $(DOCKER_IMAGE)
+
+test-patch-baseline:
+	@echo -e "--\n -> Check Linux Patch Baseline"
+	@docker run -it --rm --name $(DOCKER_IMAGE) $(DOCKER_IMAGE) test-compliance.sh dev-sec/linux-patch-baseline > $(ARTIFACT_DIR)/dev-sec-linux-patch-baseline.json || true
+	@test -z "$(COMPLIANCE_PATCH_STATUS)" && echo -e "\tPatch baseline OK" || ( echo -e "\tPatch baseline not OK, listing failed test ids:" && echo "$(COMPLIANCE_PATCH_STATUS)" && echo && exit 1 )
+
+test-hardening-baseline:
+	@echo -e "--\n -> Check Linux Hardening Baseline"
+	@docker run -it --rm --name $(DOCKER_IMAGE) $(DOCKER_IMAGE) test-compliance.sh dev-sec/linux-baseline > $(ARTIFACT_DIR)/dev-sec-linux-baseline.json || true
+	@test -z "$(COMPLIANCE_HARDEN_STATUS)" && echo -e "\tHardening baseline OK" || ( echo -e "\tHardening baseline not OK, listing failed test ids:" && echo "$(COMPLIANCE_HARDEN_STATUS)" && echo && exit 1 )
+
+test-compliance: $(ARTIFACT_DIR) test-patch-baseline test-hardening-baseline
+
+test-$(BUILD_TARGET): test-compliance test-integration

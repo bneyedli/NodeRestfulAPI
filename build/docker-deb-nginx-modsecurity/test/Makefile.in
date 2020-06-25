@@ -1,0 +1,5 @@
+test-$(BUILD_TARGET):
+	@echo "Check deb contents of $(WORKDIR)/artifacts/$(BUILD_TARGET)/libnginx-mod-security_$(MODSEC_NGINX_RELEASE)-1_amd64.deb"
+	@dpkg --contents $(WORKDIR)/artifacts/$(BUILD_TARGET)/libnginx-mod-security_$(MODSEC_NGINX_RELEASE)-1_amd64.deb | grep etc/nginx/modules/ngx_http_modsecurity_module.so > /dev/null
+	@echo "Check deb contents of $(WORKDIR)/artifacts/$(BUILD_TARGET)/libmodsecurity_$(MODSEC_RELEASE)-1_amd64.deb"
+	@dpkg --contents $(WORKDIR)/artifacts/$(BUILD_TARGET)/libmodsecurity_$(MODSEC_RELEASE)-1_amd64.deb | grep etc/nginx/modsec/unicode.mapping > /dev/null

@@ -1,0 +1,23 @@
+*** /home/bryan/Projects/bledsol/NodeRestfulAPI/build/tmp/docker-mod-nginx-modsecurity/ModSecurity/Makefile	2020-05-05 14:08:23.471838047 -0400
+--- docker-debbuild-nginx-modsecurity/files/Makefile-ModSecurity	2020-05-05 14:42:57.089267568 -0400
+***************
+*** 3170,3176 ****
+  	for dir in "$(DESTDIR)$(pkgconfigdir)"; do \
+  	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
+  	done
+! install: install-recursive
+  install-exec: install-exec-recursive
+  install-data: install-data-recursive
+  uninstall: uninstall-recursive
+--- 3170,3180 ----
+  	for dir in "$(DESTDIR)$(pkgconfigdir)"; do \
+  	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
+  	done
+! /etc/nginx/modsec/:
+! 	mkdir -p $@
+! install-extras: /etc/nginx/modsec/
+! 	cp unicode.mapping /etc/nginx/modsec/
+! install: install-recursive install-extras
+  install-exec: install-exec-recursive
+  install-data: install-data-recursive
+  uninstall: uninstall-recursive

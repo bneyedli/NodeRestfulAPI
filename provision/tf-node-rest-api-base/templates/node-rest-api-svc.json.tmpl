@@ -1,0 +1,15 @@
+[
+  {
+    "name": "rest-api",
+    "image": "${repo_host}/${repo_name}:${container_tag}",
+    "cpu": 1,
+    "memory": 512,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 80
+      }
+    ]
+  }
+]

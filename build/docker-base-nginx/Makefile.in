@@ -1,0 +1,26 @@
+#Sourced by parent Makefile ../
+DOCKER_DISTRIBUTION=ubuntu-base
+DOCKER_RELEASE=$(GIT_TAG_LAST)
+MODSEC_RELEASE=3.0.4
+MODSEC_NGINX_RELEASE=1.0.1
+NGINX_VERSION=1.16.1
+
+DOCKER_BUILD_ARGS=--build-arg DOCKER_DISTRIBUTION=$(DOCKER_DISTRIBUTION) \
+		--build-arg DOCKER_RELEASE=$(DOCKER_RELEASE) \
+		--build-arg MODSEC_RELEASE=$(MODSEC_RELEASE) \
+		--build-arg MODSEC_NGINX_RELEASE=$(MODSEC_NGINX_RELEASE)
+DOCKER_TAGS_PROJECT=$(DOCKER_DISTRIBUTION)-$(DOCKER_RELEASE) modsec-$(MODSEC_RELEASE) modsec-nginx-$(MODSEC_NGINX_RELEASE)
+
+$(BUILD_TARGET)/mod-deps:
+	@mkdir -p $@
+
+$(BUILD_TARGET)/mod-deps/libmodsecurity_$(MODSEC_RELEASE)-1_amd64.deb: $(BUILD_TARGET)/mod-deps
+	cp $(WORKDIR)/artifacts/docker-deb-nginx-modsecurity/libmodsecurity_$(MODSEC_RELEASE)-1_amd64.deb $@
+
+$(BUILD_TARGET)/mod-deps/libnginx-mod-security_$(MODSEC_NGINX_RELEASE)-1_amd64.deb: $(BUILD_TARGET)/mod-deps
+	cp $(WORKDIR)/artifacts/docker-deb-nginx-modsecurity/libnginx-mod-security_$(MODSEC_NGINX_RELEASE)-1_amd64.deb $@
+
+mod-deps: $(BUILD_TARGET)/mod-deps/libmodsecurity_$(MODSEC_RELEASE)-1_amd64.deb $(BUILD_TARGET)/mod-deps/libnginx-mod-security_$(MODSEC_NGINX_RELEASE)-1_amd64.deb
+deps: mod-deps
+
+build-$(BUILD_TARGET): deps build-docker
